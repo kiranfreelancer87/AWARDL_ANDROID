@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    tools:context=".LoginActivity"
+    android:id="@+id/parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_gravity="center"
+        android:src="@drawable/piddlepoplogo" />
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_36sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans"
+            android:text="Type your "
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_bold"
+            android:text="First"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans"
+            android:textSize="@dimen/_12ssp"
+            android:text=" &amp; " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_bold"
+            android:text="Last Name "
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans"
+            android:text="to Play!"
+            android:textSize="@dimen/_12ssp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etName"
+        android:gravity="center"
+        android:maxLines="1"
+        android:inputType="text"
+        android:background="@drawable/rounded_bg_nameinput"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:minWidth="@dimen/_150sdp"
+        android:minHeight="@dimen/_28sdp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Jhon Doe"
+        android:fontFamily="@font/open_sans"
+        />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:inputType="textEmailAddress"
+        android:gravity="center"
+        android:maxLines="1"
+        android:background="@drawable/rounded_bg_nameinput"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:minWidth="@dimen/_150sdp"
+        android:minHeight="@dimen/_28sdp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="abc@abc.com"
+        android:fontFamily="@font/open_sans"
+        />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:text="START"
+        android:backgroundTint="@android:color/holo_blue_bright"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
