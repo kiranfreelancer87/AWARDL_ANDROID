@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_54sdp"
-    android:layout_height="@dimen/_36sdp"
+    android:layout_height="@dimen/_38sdp"
     android:layout_gravity="center"
     android:gravity="center">
     <LinearLayout
@@ -10,7 +10,7 @@
         android:gravity="center"
         android:layout_margin="@dimen/_1sdp"
         android:layout_width="@dimen/_36sdp"
-        android:layout_height="@dimen/_24sdp">
+        android:layout_height="@dimen/_26sdp">
         <TextView
             android:background="@color/teal_200"
             android:id="@+id/tvLetter"

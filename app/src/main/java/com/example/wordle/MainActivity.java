@@ -65,15 +65,12 @@ public class MainActivity extends AppCompatActivity {
     boolean shouldRunTimer = false;
     private TextView tvTimer;
 
-    public void runTimer(){
-        long millis = seconds * 1000;
-        String time = String.format("%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-        tvTimer.setText(time);
-        if (shouldRunTimer){
+    public void runTimer() {
+        if (shouldRunTimer) {
+            long millis = seconds * 1000;
+            String time = String.format("%02d:%02d",TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+
+            tvTimer.setText(time);
             seconds++;
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -172,14 +169,20 @@ public class MainActivity extends AppCompatActivity {
     private void setWord() {
         String[] strings = new String[]{"Scene", "Films", "Movie", "Flick", "Props", "Actor", "Track", "Short", "Light", "Grips", "Shoot", "Rerun", "Indie", "Stage", "Reels", "Video", "Roles", "Epics", "Stunt", "Score", "Takes", "Clamp", "Dolly", "Cameo", "Edits", "Booms", "Extra", "Focus", "Frame", "Title", "Pitch", "Alien", "Ariel", "Crash", "Doubt", "Dumbo", "Earth", "Evita", "Fargo", "Ghost", "Giant", "Greed", "Hotel", "Rambo", "Rocky", "Yentl", "Reels", "Pizza", "Boozy", "Crazy", "Joker", "Shrek", "Dozen", "Fluke", "Caste", "Cache", "Squid", "Champ", "Boxer", "Jaded", "Queen", "Zorro", "Phony", "Bambi", "Speed", "Hitch", "Taken", "Click", "Blade", "Signs", "Crash", "Holes", "Frida", "Radio", "Crank", "Honey", "Babel", "Duets", "Shine", "Awake", "Nixon", "Scoop", "Heist", "Glory", "Venom", "Ponyo", "Brave", "Mulan", "Great", "Scifi", "Drama", "Bones", "Arrow", "Psych", "CHIPS", "Alias", "Louie", "Daria", "Weeds", "Chuck", "Suits", "Angel", "Grimm", "Greek", "Skins", "Haven", "Wacky", "Conan", "Kojak", "Maude", "Plays", "Debut", "Trade", "Viral", "rerun"};
         this.correct = strings[new Random().nextInt(strings.length)].toUpperCase(Locale.ROOT);
+        AlertDialog.Builder al = new AlertDialog.Builder(MainActivity.this);
+        al.setTitle(MessageFormat.format("Correct word is {0}.",correct));
+        al.show();
     }
 
     private void restartGame() {
+        seconds = 0;
         activePosition = 0;
+        shouldRunTimer = true;
         activeRow = 0;
         tvSpaces.clear();
         binding.getRoot().removeAllViews();
         binding.getRoot().invalidate();
+        runTimer();
         initImage();
         setWord();
         initGrid();
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         binding.getRoot().addView(gap);
     }
 
-    private void initFooter(){
+    private void initFooter() {
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.custommadepiddlepop);
         binding.getRoot().addView(imageView);
@@ -212,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout columnLinearLayout = new LinearLayout(this);
             columnLinearLayout.setGravity(Gravity.CENTER);
             columnLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            if (i == 0){
+            if (i == 0) {
                 LinearLayout messageLayout = new LinearLayout(this);
                 messageLayout.setGravity(Gravity.CENTER);
                 messageLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -395,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog1.setContentView(gameOverDialogBinding.getRoot());
                     dialog1.setCancelable(false);
                     dialog1.show();
+                    shouldRunTimer = false;
                     ColorDrawable cd = new ColorDrawable();
                     cd.setColor(Color.parseColor("#98FFFFFF"));
                     Window dWin = dialog1.getWindow();
@@ -404,7 +408,105 @@ public class MainActivity extends AppCompatActivity {
                     GameWinDialogBinding gameWinDialogBinding = GameWinDialogBinding.inflate(getLayoutInflater());
                     gameWinDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
                     gameWinDialogBinding.tvWinMsg.setText(MessageFormat.format("CONGRATULATIONS\n{0}!", name));
-                    gameWinDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", 100));
+                    float point = 0.0f;
+                    if (seconds < 45) {
+                        switch (activeRow) {
+                            case 1:
+                            case 2:
+                                point = 200;
+                                break;
+                            case 3:
+                                point = 132;
+                                break;
+                            case 4:
+                                point = 100;
+                                break;
+                            case 5:
+                                point = 80;
+                                break;
+                            case 6:
+                                point = 66;
+                                break;
+                        }
+                    } else if (seconds < 90) {
+                        switch (activeRow) {
+                            case 1:
+                            case 2:
+                                point = 150;
+                                break;
+                            case 3:
+                                point = 99;
+                                break;
+                            case 4:
+                                point = 75;
+                                break;
+                            case 5:
+                                point = 60;
+                                break;
+                            case 6:
+                                point = 49.5f;
+                                break;
+                        }
+                    } else if (seconds <= 150) {
+                        switch (activeRow) {
+                            case 1:
+                            case 2:
+                                point = 100;
+                                break;
+                            case 3:
+                                point = 66;
+                                break;
+                            case 4:
+                                point = 50;
+                                break;
+                            case 5:
+                                point = 40;
+                                break;
+                            case 6:
+                                point = 33;
+                                break;
+                        }
+                    } else if (seconds <= 210) {
+                        switch (activeRow) {
+                            case 1:
+                            case 2:
+                                point = 75;
+                                break;
+                            case 3:
+                                point = 49.5f;
+                                break;
+                            case 4:
+                                point = 37.5f;
+                                break;
+                            case 5:
+                                point = 30;
+                                break;
+                            case 6:
+                                point = 24.75f;
+                                break;
+                        }
+                    } else {
+                        switch (activeRow) {
+                            case 1:
+                            case 2:
+                                point = 50;
+                                break;
+                            case 3:
+                                point = 33;
+                                break;
+                            case 4:
+                                point = 25;
+                                break;
+                            case 5:
+                                point = 20;
+                                break;
+                            case 6:
+                                point = 16.5f;
+                                break;
+                        }
+                    }
+                    Log.wtf("Point........", "" + point);
+                    gameWinDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", point));
                     Dialog dialog1 = new Dialog(this);
                     gameWinDialogBinding.btnBackToMain.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -425,6 +527,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog1.setContentView(gameWinDialogBinding.getRoot());
                     dialog1.setCancelable(false);
                     dialog1.show();
+                    shouldRunTimer = false;
                     ColorDrawable cd = new ColorDrawable();
                     cd.setColor(Color.parseColor("#98FFFFFF"));
                     Window dWin = dialog1.getWindow();

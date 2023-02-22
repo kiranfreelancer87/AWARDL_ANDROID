@@ -28,14 +28,10 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.parent.post(() -> {
-            AlertDialog.Builder al = new AlertDialog.Builder(LoginActivity.this);
-            al.setTitle(MessageFormat.format("Width: {0}, Height: {1}", binding.parent.getWidth(), binding.parent.getHeight()));
-            al.show();
-        });
-
         binding.btnLogin.setOnClickListener(view -> {
-            if (binding.etName.getText().toString().isEmpty() || !binding.etName.getText().toString().contains(" ")) { binding.etName.setError("Enter Valid First & Last name"); return;
+            if (binding.etName.getText().toString().isEmpty() || !binding.etName.getText().toString().contains(" ")) {
+                binding.etName.setError("Enter Valid First & Last name");
+                return;
             }
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("name", binding.etName.getText().toString());
