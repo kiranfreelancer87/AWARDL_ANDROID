@@ -36,13 +36,23 @@ import com.example.wordle.databinding.KeyboardBackButtonBinding;
 import com.example.wordle.databinding.KeyboardEnterButtonBinding;
 import com.example.wordle.databinding.KeyboardViewBinding;
 import com.example.wordle.databinding.LetterViewBinding;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     String correct = "";
 
     String name = "";
+    String email;
 
     long seconds = 0;
     boolean shouldRunTimer = false;
@@ -68,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     public void runTimer() {
         if (shouldRunTimer) {
             long millis = seconds * 1000;
-            String time = String.format("%02d:%02d",TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+            String time = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 
             tvTimer.setText(time);
             seconds++;
@@ -90,8 +101,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
-        if (getIntent().getStringExtra("name") != null) {
+        if (getIntent().getStringExtra("name") != null && getIntent().getStringExtra("email") != null) {
             this.name = getIntent().getStringExtra("name");
+            this.email = getIntent().getStringExtra("email");
         } else {
             finish();
         }
@@ -170,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         String[] strings = new String[]{"Scene", "Films", "Movie", "Flick", "Props", "Actor", "Track", "Short", "Light", "Grips", "Shoot", "Rerun", "Indie", "Stage", "Reels", "Video", "Roles", "Epics", "Stunt", "Score", "Takes", "Clamp", "Dolly", "Cameo", "Edits", "Booms", "Extra", "Focus", "Frame", "Title", "Pitch", "Alien", "Ariel", "Crash", "Doubt", "Dumbo", "Earth", "Evita", "Fargo", "Ghost", "Giant", "Greed", "Hotel", "Rambo", "Rocky", "Yentl", "Reels", "Pizza", "Boozy", "Crazy", "Joker", "Shrek", "Dozen", "Fluke", "Caste", "Cache", "Squid", "Champ", "Boxer", "Jaded", "Queen", "Zorro", "Phony", "Bambi", "Speed", "Hitch", "Taken", "Click", "Blade", "Signs", "Crash", "Holes", "Frida", "Radio", "Crank", "Honey", "Babel", "Duets", "Shine", "Awake", "Nixon", "Scoop", "Heist", "Glory", "Venom", "Ponyo", "Brave", "Mulan", "Great", "Scifi", "Drama", "Bones", "Arrow", "Psych", "CHIPS", "Alias", "Louie", "Daria", "Weeds", "Chuck", "Suits", "Angel", "Grimm", "Greek", "Skins", "Haven", "Wacky", "Conan", "Kojak", "Maude", "Plays", "Debut", "Trade", "Viral", "rerun"};
         this.correct = strings[new Random().nextInt(strings.length)].toUpperCase(Locale.ROOT);
         AlertDialog.Builder al = new AlertDialog.Builder(MainActivity.this);
-        al.setTitle(MessageFormat.format("Correct word is {0}.",correct));
+        al.setTitle(MessageFormat.format("Correct word is {0}.", correct));
         al.show();
     }
 
@@ -377,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
                     gameOverDialogBinding.tvSorryMsg.setText(MessageFormat.format("Sorry  {0},\nthe  word  was:", name));
                     gameOverDialogBinding.tvCorrectWord.setText(correct);
                     gameOverDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", "0"));
-
+                    postResult(0, activeRow);
                     Dialog dialog1 = new Dialog(this);
                     gameOverDialogBinding.btnBackToMain.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -505,8 +517,9 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                         }
                     }
-                    Log.wtf("Point........", "" + point);
+
                     gameWinDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", point));
+                    postResult(point, activeRow);
                     Dialog dialog1 = new Dialog(this);
                     gameWinDialogBinding.btnBackToMain.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -546,5 +559,26 @@ public class MainActivity extends AppCompatActivity {
             scaleView(tvSpaces.get(activePosition), 0f, 1f);
             activePosition++;
         }
+    }
+
+    private void postResult(float point, int noOfGuesses) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(APIInterface.BASE_URL).addConverterFactory(GsonConverterFactory.create(new Gson())).build();
+        APIInterface api = retrofit.create(APIInterface.class);
+        PostResultModel postBody = new PostResultModel(name, email, seconds, noOfGuesses, point);
+        api.postResult(postBody).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    response.body().string();
+                } catch (Exception e) {
+                    Snackbar.make(binding.getRoot(), "" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Snackbar.make(binding.getRoot(), "" + t.getMessage(), Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 }

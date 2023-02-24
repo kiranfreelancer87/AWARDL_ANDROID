@@ -17,6 +17,7 @@ import java.util.Random;
 public class LoginActivity extends AppCompatActivity {
 
     ActivityLoginBinding binding;
+    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,16 @@ public class LoginActivity extends AppCompatActivity {
                 binding.etName.setError("Enter Valid First & Last name");
                 return;
             }
+            if (binding.etEmail.getText().toString().isEmpty() || !binding.etEmail.getText().toString().matches(emailPattern)) {
+                binding.etEmail.setError("Enter Valid Email Address");
+                return;
+            }
+
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("name", binding.etName.getText().toString());
+            intent.putExtra("email", binding.etEmail.getText().toString());
             finish();
             startActivity(intent);
         });
-
     }
 }
