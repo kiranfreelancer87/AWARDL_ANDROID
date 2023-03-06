@@ -1,5 +1,7 @@
 package com.example.wordle;
 
+import static com.google.android.material.transition.MaterialSharedAxis.X;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -9,8 +11,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +25,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -118,20 +124,31 @@ public class MainActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this);
         hintDialogBinding.getRoot().setOnClickListener(view -> dialog.dismiss());
         dialog.setContentView(hintDialogBinding.getRoot());
+
+        dialog.show();
+
+        Window dWin = dialog.getWindow();
+        dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        dWin.setBackgroundDrawable(null);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            binding.getRoot().setRenderEffect(RenderEffect.createBlurEffect(
+                    30f, //radius X
+                    30f, //Radius Y
+                    Shader.TileMode.MIRROR// X=CLAMP,DECAL,MIRROR,REPEAT
+            ));
+        }
+
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 shouldRunTimer = true;
                 runTimer();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    binding.getRoot().setRenderEffect(null);
+                }
             }
         });
-        dialog.show();
-
-        ColorDrawable cd = new ColorDrawable();
-        cd.setColor(Color.parseColor("#98FFFFFF"));
-        Window dWin = dialog.getWindow();
-        dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        dWin.setBackgroundDrawable(cd);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -154,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView = new ImageView(this);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        imageView.setLayoutParams(new ViewGroup.LayoutParams((displayMetrics.widthPixels / 10) * 2, (displayMetrics.widthPixels / 10)));
+        imageView.setLayoutParams(new ViewGroup.LayoutParams((displayMetrics.widthPixels / 4) * 2, (displayMetrics.widthPixels / 4)));
         imageView.setImageResource(R.drawable.mptftoplogo);
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         relativeLayout.setGravity(RelativeLayout.CENTER_VERTICAL);
@@ -217,9 +234,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFooter() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.custommadepiddlepop);
-        binding.getRoot().addView(imageView);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(displayMetrics.widthPixels / 5,displayMetrics.widthPixels / 5));
+        imageView.setImageResource(R.drawable.madebypiddlepops);
+        LinearLayout v = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        v.setGravity(Gravity.BOTTOM|Gravity.CENTER);
+        v.setLayoutParams(lp);
+        v.addView(imageView);
+        binding.getRoot().addView(v);
     }
 
     private void initGrid() {
@@ -416,11 +441,25 @@ public class MainActivity extends AppCompatActivity {
                     dialog1.setCancelable(false);
                     dialog1.show();
                     shouldRunTimer = false;
-                    ColorDrawable cd = new ColorDrawable();
-                    cd.setColor(Color.parseColor("#98FFFFFF"));
                     Window dWin = dialog1.getWindow();
                     dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    dWin.setBackgroundDrawable(cd);
+                    dWin.setBackgroundDrawable(null);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        binding.getRoot().setRenderEffect(RenderEffect.createBlurEffect(
+                                30f, //radius X
+                                30f, //Radius Y
+                                Shader.TileMode.MIRROR// X=CLAMP,DECAL,MIRROR,REPEAT
+                        ));
+                    }
+
+                    dialog1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                binding.getRoot().setRenderEffect(null);
+                            }
+                        }
+                    });
                 } else if (checkIfCorrect) {
                     GameWinDialogBinding gameWinDialogBinding = GameWinDialogBinding.inflate(getLayoutInflater());
                     gameWinDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
@@ -474,11 +513,25 @@ public class MainActivity extends AppCompatActivity {
                     dialog1.setCancelable(false);
                     dialog1.show();
                     shouldRunTimer = false;
-                    ColorDrawable cd = new ColorDrawable();
-                    cd.setColor(Color.parseColor("#98FFFFFF"));
                     Window dWin = dialog1.getWindow();
                     dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    dWin.setBackgroundDrawable(cd);
+                    dWin.setBackgroundDrawable(null);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        binding.getRoot().setRenderEffect(RenderEffect.createBlurEffect(
+                                30f, //radius X
+                                30f, //Radius Y
+                                Shader.TileMode.MIRROR// X=CLAMP,DECAL,MIRROR,REPEAT
+                        ));
+                    }
+
+                    dialog1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                binding.getRoot().setRenderEffect(null);
+                            }
+                        }
+                    });
                 }
             }
         } else if (v.getTag().toString().equals("Back")) {

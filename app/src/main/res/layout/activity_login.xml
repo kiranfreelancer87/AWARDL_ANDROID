@@ -151,7 +151,7 @@
 
     <ImageView
         android:layout_gravity="bottom"
-        android:src="@drawable/custommadepiddlepop"
+        android:src="@drawable/madebypiddlepops"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"/>
 

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/llParent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -8,7 +10,7 @@
     android:gravity="center">
     <androidx.cardview.widget.CardView
         android:id="@+id/cvCard"
-        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
         android:layout_width="@dimen/_250sdp"
         android:layout_height="@dimen/_150sdp">
         <androidx.cardview.widget.CardView
