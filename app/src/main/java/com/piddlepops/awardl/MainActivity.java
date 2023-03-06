@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if (seconds > (10 * 60)){
             seconds = 0;
             shouldRunTimer = false;
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, SplashActivity.class));
             finish();
         }
         if (shouldRunTimer) {
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         imageView.setLayoutParams(new ViewGroup.LayoutParams((displayMetrics.widthPixels / 6) * 2, (displayMetrics.widthPixels / 6)));
-        imageView.setImageResource(R.drawable.mptftoplogo);
+        imageView.setImageResource(R.drawable.mptfawardl);
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         relativeLayout.setGravity(RelativeLayout.CENTER_VERTICAL);
         LinearLayout linearLayout = new LinearLayout(this);
@@ -432,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             dialog1.dismiss();
                             finish();
-                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            startActivity(new Intent(MainActivity.this, SplashActivity.class));
                         }
                     });
                     gameOverDialogBinding.btnNew.setOnClickListener(new View.OnClickListener() {

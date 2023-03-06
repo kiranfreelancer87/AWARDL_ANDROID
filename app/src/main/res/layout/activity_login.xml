@@ -20,7 +20,7 @@
             android:layout_width="@dimen/_250sdp"
             android:layout_height="@dimen/_125sdp"
             android:layout_gravity="center"
-            android:src="@drawable/mptftoplogo" />
+            android:src="@drawable/mptfawardl" />
 
         <LinearLayout
             android:layout_width="match_parent"
