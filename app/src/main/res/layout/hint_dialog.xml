@@ -45,7 +45,7 @@
                         <TextView
                             android:layout_marginStart="@dimen/_10sdp"
                             android:text="White Box:\nIncorrect letter"
-                            android:fontFamily="@font/opensans_bold"
+                            android:fontFamily="@font/gothambold"
                             android:textSize="@dimen/_12ssp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -73,7 +73,7 @@
                         <TextView
                             android:layout_marginStart="@dimen/_10sdp"
                             android:text="Yellow Box:\nCorrect letter, Incorrect space"
-                            android:fontFamily="@font/opensans_bold"
+                            android:fontFamily="@font/gothambold"
                             android:textSize="@dimen/_12ssp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -101,7 +101,7 @@
                         <TextView
                             android:layout_marginStart="@dimen/_10sdp"
                             android:text="Green Box:\nCorrect letter, correct space"
-                            android:fontFamily="@font/opensans_bold"
+                            android:fontFamily="@font/gothambold"
                             android:textSize="@dimen/_12ssp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>

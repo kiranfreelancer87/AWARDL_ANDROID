@@ -17,8 +17,8 @@
         android:id="@+id/parent">
 
         <ImageView
-            android:layout_width="@dimen/_200sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="@dimen/_125sdp"
             android:layout_gravity="center"
             android:src="@drawable/mptftoplogo" />
 
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/open_sans"
+                android:fontFamily="@font/gothamlight"
                 android:text="Enter your"
                 android:textSize="@dimen/_15ssp" />
             <LinearLayout
@@ -48,7 +48,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/opensans_bold"
+                    android:fontFamily="@font/gothambold"
                     android:text="First"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15ssp" />
@@ -56,14 +56,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans"
+                    android:fontFamily="@font/gothamlight"
                     android:textSize="@dimen/_15ssp"
                     android:text=" &amp; " />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/opensans_bold"
+                    android:fontFamily="@font/gothambold"
                     android:text="Last Name "
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15ssp" />
@@ -89,14 +89,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/opensans_bold"
+                    android:fontFamily="@font/gothambold"
                     android:text="Email "
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15ssp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans"
+                    android:fontFamily="@font/gothamlight"
                     android:text="to Play!"
                     android:textSize="@dimen/_15ssp" />
             </LinearLayout>
@@ -118,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="First &amp; Last Name"
-            android:fontFamily="@font/open_sans"
+            android:fontFamily="@font/gothamlight"
             />
 
         <EditText
@@ -134,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Email"
-            android:fontFamily="@font/open_sans"
+            android:fontFamily="@font/gothamlight"
             />
 
         <Button
@@ -150,9 +150,10 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/ivCustomLogo"
         android:layout_gravity="bottom"
         android:src="@drawable/madebypiddlepops"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"/>
+        android:layout_height="@dimen/_64sdp"/>
 
 </FrameLayout>

@@ -29,7 +29,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textSize="@dimen/_15ssp"
-                    android:fontFamily="@font/open_sans"
+                    android:fontFamily="@font/gothamlight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
@@ -38,7 +38,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textSize="@dimen/_18ssp"
-                    android:fontFamily="@font/opensans_extrabold"
+                    android:fontFamily="@font/gothambold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
@@ -47,7 +47,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textSize="@dimen/_15ssp"
-                    android:fontFamily="@font/open_sans"
+                    android:fontFamily="@font/gothamlight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
@@ -56,7 +56,7 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/opensans_extrabold"
+                    android:fontFamily="@font/gothambold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -88,7 +88,7 @@
                     android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center"
                     android:background="#d3d3d3"
-                    android:fontFamily="@font/opensans_bold"
+                    android:fontFamily="@font/gothambold"
                     android:gravity="center"
                     android:text="HOME"
                     android:textColor="@color/black"
@@ -110,7 +110,7 @@
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="center"
                 android:background="#d3d3d3"
-                android:fontFamily="@font/opensans_bold"
+                android:fontFamily="@font/gothambold"
                 android:gravity="center"
                 android:text="AGAIN?"
                 android:textColor="@color/black"

@@ -15,6 +15,7 @@ import android.graphics.RenderEffect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
         String time = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 
         if (seconds > (10 * 60)){
+            seconds = 0;
+            shouldRunTimer = false;
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
@@ -126,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(hintDialogBinding.getRoot());
 
         dialog.show();
+
 
         Window dWin = dialog.getWindow();
         dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -171,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView = new ImageView(this);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        imageView.setLayoutParams(new ViewGroup.LayoutParams((displayMetrics.widthPixels / 4) * 2, (displayMetrics.widthPixels / 4)));
+        imageView.setLayoutParams(new ViewGroup.LayoutParams((displayMetrics.widthPixels / 6) * 2, (displayMetrics.widthPixels / 6)));
         imageView.setImageResource(R.drawable.mptftoplogo);
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         relativeLayout.setGravity(RelativeLayout.CENTER_VERTICAL);
@@ -186,13 +190,13 @@ public class MainActivity extends AppCompatActivity {
         timerLp.setMargins(15, 15, 0, 0);
         textView.setText("00:00");
         this.tvTimer = textView;
-        Typeface timerTypeFace = getResources().getFont(R.font.opensans_bold);
+        Typeface timerTypeFace = getResources().getFont(R.font.gothambold);
         textView.setTypeface(timerTypeFace);
         textView.setTextColor(Color.BLACK);
         relativeLayout.addView(textView);
 
         View topMargin = new View(this);
-        topMargin.setLayoutParams(new ViewGroup.LayoutParams(displayMetrics.widthPixels / 8, ((displayMetrics.widthPixels / 8) / 4) / 2));
+        topMargin.setLayoutParams(new ViewGroup.LayoutParams(displayMetrics.widthPixels, ((displayMetrics.widthPixels / 10) / 4) / 2));
         binding.getRoot().addView(topMargin);
         binding.getRoot().addView(relativeLayout);
         View viewAfterImage = new View(this);
@@ -229,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         View gap = new View(this);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        gap.setLayoutParams(new LinearLayout.LayoutParams(displayMetrics.widthPixels / 8, ((displayMetrics.widthPixels / 10))));
+        gap.setLayoutParams(new LinearLayout.LayoutParams(displayMetrics.widthPixels / 9, ((displayMetrics.widthPixels / 9))));
         binding.getRoot().addView(gap);
     }
 
@@ -239,9 +243,11 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ViewGroup.LayoutParams(displayMetrics.widthPixels / 5,displayMetrics.widthPixels / 5));
         imageView.setImageResource(R.drawable.madebypiddlepops);
+
         LinearLayout v = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         v.setGravity(Gravity.BOTTOM|Gravity.CENTER);
+        v.setOrientation(LinearLayout.VERTICAL);
         v.setLayoutParams(lp);
         v.addView(imageView);
         binding.getRoot().addView(v);
@@ -270,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                         textView.setTextColor(Color.BLACK);
                     }
                 });
-                Typeface tf = ResourcesCompat.getFont(this, R.font.opensans_bold);
+                Typeface tf = ResourcesCompat.getFont(this, R.font.gothambold);
                 textView.setTypeface(tf);
                 messageLayout.addView(textView);
                 rowsLinearLayout.addView(messageLayout);
@@ -416,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!checkIfCorrect && activeRow == letterGridArray.length) {
                     GameOverDialogBinding gameOverDialogBinding = GameOverDialogBinding.inflate(getLayoutInflater());
                     gameOverDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
-                    gameOverDialogBinding.tvSorryMsg.setText(MessageFormat.format("Sorry  {0},\nthe  word  was:", name));
+                    gameOverDialogBinding.tvSorryMsg.setText(MessageFormat.format("Sorry {0},\nthe word was:", name));
                     gameOverDialogBinding.tvCorrectWord.setText(correct);
                     gameOverDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", "10"));
                     postResult(10, activeRow);

@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/opensans_extrabold"
+                    android:fontFamily="@font/gothambold"
                     android:gravity="center"
                     android:textSize="@dimen/_20ssp"
                     android:textStyle="bold" />
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:fontFamily="@font/open_sans"
+                    android:fontFamily="@font/gothamlight"
                     android:gravity="center"
                     android:text="You guessed the word correctly!"
                     android:textSize="@dimen/_15ssp" />
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:fontFamily="@font/opensans_extrabold"
+                    android:fontFamily="@font/gothambold"
                     android:gravity="center"
                     android:textSize="@dimen/_15ssp" />
             </LinearLayout>
@@ -86,7 +86,7 @@
                     android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center"
                     android:background="#d3d3d3"
-                    android:fontFamily="@font/opensans_bold"
+                    android:fontFamily="@font/gothambold"
                     android:gravity="center"
                     android:text="HOME"
                     android:textColor="@color/black"
@@ -108,7 +108,7 @@
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="center"
                 android:background="#d3d3d3"
-                android:fontFamily="@font/opensans_bold"
+                android:fontFamily="@font/gothambold"
                 android:gravity="center"
                 android:text="AGAIN?"
                 android:textColor="@color/black"
