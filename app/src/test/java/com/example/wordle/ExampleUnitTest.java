@@ -1,4 +1,4 @@
-package com.example.wordle;
+package com.piddlepops.awardl;
 
 import org.junit.Test;
 

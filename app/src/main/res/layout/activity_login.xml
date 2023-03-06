@@ -152,8 +152,8 @@
     <ImageView
         android:id="@+id/ivCustomLogo"
         android:layout_gravity="bottom"
-        android:src="@drawable/madebypiddlepops"
+        android:src="@drawable/custom_made_by_piddlepops"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_64sdp"/>
+        android:layout_height="@dimen/_36sdp"/>
 
 </FrameLayout>
