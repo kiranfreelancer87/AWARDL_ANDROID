@@ -14,6 +14,7 @@ import com.piddlepops.awardl.databinding.ActivityLoginBinding;
 
 import java.text.MessageFormat;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         binding.btnLogin.setOnClickListener(view -> {
-            if (binding.etName.getText().toString().isEmpty() || !binding.etName.getText().toString().contains(" ")) {
+            if (binding.etName.getText().toString().isEmpty() || !binding.etName.getText().toString().matches("[a-zA-Z]{1,}\s[a-zA-Z]{1,}")) {
                 binding.etName.setError("Enter Valid First & Last name");
                 return;
             }

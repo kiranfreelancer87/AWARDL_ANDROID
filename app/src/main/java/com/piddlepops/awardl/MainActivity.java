@@ -8,8 +8,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
@@ -45,11 +48,13 @@ import com.piddlepops.awardl.databinding.KeyboardViewBinding;
 import com.piddlepops.awardl.databinding.LetterViewBinding;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.piddlepops.awardl.reswords.WordsResponse;
 
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -82,17 +87,23 @@ public class MainActivity extends AppCompatActivity {
     long seconds = 0;
     boolean shouldRunTimer = false;
     private TextView tvTimer;
+    private WordsResponse wordsResponse;
+
+    private Dialog dialog;
+
+    private SharedPreferences sharedPreferences;
+
 
     public void runTimer() {
 
         long millis = seconds * 1000;
         String time = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 
-        if (seconds > (10 * 60)){
+        if (seconds > (10 * 60)) {
             seconds = 0;
             shouldRunTimer = false;
-            startActivity(new Intent(MainActivity.this, SplashActivity.class));
             finish();
+            startActivity(new Intent(MainActivity.this, SplashActivity.class));
         }
         if (shouldRunTimer) {
             tvTimer.setText(time);
@@ -110,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sharedPreferences = getSharedPreferences("AWARDL", Context.MODE_PRIVATE);
+
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
 
@@ -124,16 +138,9 @@ public class MainActivity extends AppCompatActivity {
 
         HintDialogBinding hintDialogBinding = HintDialogBinding.inflate(getLayoutInflater());
         hintDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
-        Dialog dialog = new Dialog(this);
+        dialog = new Dialog(this);
         hintDialogBinding.getRoot().setOnClickListener(view -> dialog.dismiss());
         dialog.setContentView(hintDialogBinding.getRoot());
-
-        dialog.show();
-
-
-        Window dWin = dialog.getWindow();
-        dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        dWin.setBackgroundDrawable(null);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             binding.getRoot().setRenderEffect(RenderEffect.createBlurEffect(
@@ -162,12 +169,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initGame() {
-        setWord();
-        initImage();
-        initGrid();
-        initBlankSpace();
-        initKeyboard();
-        initFooter();
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(sharedPreferences.getString("IP", "")).addConverterFactory(GsonConverterFactory.create(new Gson())).build();
+        APIInterface api = retrofit.create(APIInterface.class);
+        Call<WordsResponse> call = api.getWords();
+        call.enqueue(new Callback<WordsResponse>() {
+            @Override
+            public void onResponse(Call<WordsResponse> call, Response<WordsResponse> response) {
+                progressDialog.dismiss();
+                if (response.body() != null && response.body().getData() != null && response.body().getData().size() > 0) {
+                    wordsResponse = response.body();
+
+                    //Show Dialog on Success Loading Words
+                    dialog.show();
+                    Window dWin = dialog.getWindow();
+                    dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    dWin.setBackgroundDrawable(null);
+
+                    //Init Actions
+                    setWord();
+                    initImage();
+                    initGrid();
+                    initBlankSpace();
+                    initKeyboard();
+                    initFooter();
+                } else {
+                    showNoWordsDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WordsResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                showNoWordsDialog();
+            }
+        });
+    }
+
+    private void showNoWordsDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Error while fetching words!");
+        alertDialog.setPositiveButton("RESTART", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+                startActivity(new Intent(MainActivity.this, SplashActivity.class));
+            }
+        });
+        alertDialog.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.exit(0);
+            }
+        });
+        alertDialog.show();
     }
 
     private void initImage() {
@@ -205,28 +262,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setWord() {
-        String[] strings = new String[]{"Scene", "Films", "Movie", "Flick", "Props", "Actor", "Track", "Short", "Light", "Grips", "Shoot", "Rerun", "Indie", "Stage", "Reels", "Video", "Roles", "Epics", "Stunt", "Score", "Takes", "Clamp", "Dolly", "Cameo", "Edits", "Booms", "Extra", "Focus", "Frame", "Title", "Pitch", "Alien", "Ariel", "Crash", "Doubt", "Dumbo", "Earth", "Evita", "Fargo", "Ghost", "Giant", "Greed", "Hotel", "Rambo", "Rocky", "Yentl", "Reels", "Pizza", "Boozy", "Crazy", "Joker", "Shrek", "Dozen", "Fluke", "Caste", "Cache", "Squid", "Champ", "Boxer", "Jaded", "Queen", "Zorro", "Phony", "Bambi", "Speed", "Hitch", "Taken", "Click", "Blade", "Signs", "Crash", "Holes", "Frida", "Radio", "Crank", "Honey", "Babel", "Duets", "Shine", "Awake", "Nixon", "Scoop", "Heist", "Glory", "Venom", "Ponyo", "Brave", "Mulan", "Great", "Scifi", "Drama", "Bones", "Arrow", "Psych", "CHIPS", "Alias", "Louie", "Daria", "Weeds", "Chuck", "Suits", "Angel", "Grimm", "Greek", "Skins", "Haven", "Wacky", "Conan", "Kojak", "Maude", "Plays", "Debut", "Trade", "Viral", "rerun"};
-        this.correct = strings[new Random().nextInt(strings.length)].toUpperCase(Locale.ROOT);
-        //AlertDialog.Builder al = new AlertDialog.Builder(MainActivity.this);
-        //al.setTitle(MessageFormat.format("Correct word is {0}.", correct));
-        //al.show();
+        this.correct = (wordsResponse.getData().toArray()[new Random().nextInt(wordsResponse.getData().size())] + "").toUpperCase(Locale.ROOT);
     }
 
     private void restartGame() {
-        seconds = 0;
-        activePosition = 0;
-        shouldRunTimer = true;
-        activeRow = 0;
-        tvSpaces.clear();
-        binding.getRoot().removeAllViews();
-        binding.getRoot().invalidate();
-        runTimer();
-        initImage();
-        setWord();
-        initGrid();
-        initBlankSpace();
-        initKeyboard();
-        initFooter();
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(sharedPreferences.getString("IP", "")).addConverterFactory(GsonConverterFactory.create(new Gson())).build();
+        APIInterface api = retrofit.create(APIInterface.class);
+        Call<WordsResponse> call = api.getWords();
+        call.enqueue(new Callback<WordsResponse>() {
+            @Override
+            public void onResponse(Call<WordsResponse> call, Response<WordsResponse> response) {
+                progressDialog.dismiss();
+                if (response.body() != null && response.body().getData() != null && response.body().getData().size() > 0) {
+                    wordsResponse = response.body();
+                    seconds = 0;
+                    activePosition = 0;
+                    shouldRunTimer = true;
+                    activeRow = 0;
+                    tvSpaces.clear();
+                    binding.getRoot().removeAllViews();
+                    binding.getRoot().invalidate();
+                    runTimer();
+                    initImage();
+                    setWord();
+                    initGrid();
+                    initBlankSpace();
+                    initKeyboard();
+                    initFooter();
+                } else {
+                    showNoWordsDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WordsResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                showNoWordsDialog();
+            }
+        });
     }
 
     private void initBlankSpace() {
@@ -246,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout v = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        v.setGravity(Gravity.BOTTOM|Gravity.CENTER);
+        v.setGravity(Gravity.BOTTOM | Gravity.CENTER);
         v.setOrientation(LinearLayout.VERTICAL);
         v.setLayoutParams(lp);
         v.addView(imageView);
@@ -382,6 +458,9 @@ public class MainActivity extends AppCompatActivity {
                 if (correct.toCharArray().length != letterGridArray[0].length) {
                     return;
                 }
+                int changeSize = 0;
+
+
                 for (int i = activeRow * letterGridArray[0].length; i < (activeRow + 1) * letterGridArray[0].length; i++) {
                     TextView viewToAnimate = tvSpaces.get(i);
 
@@ -393,14 +472,57 @@ public class MainActivity extends AppCompatActivity {
                         LinearLayout linearLayout = (LinearLayout) viewToAnimate.getParent();
                         linearLayout.setBackgroundColor(getColor(R.color.green));
                     } else {
-                        if (correct.contains(viewToAnimate.getText().toString())) {
-                            LinearLayout linearLayout = (LinearLayout) viewToAnimate.getParent();
-                            linearLayout.setBackgroundColor(getColor(R.color.darkend_Yellow));
-                        } else {
-                            LinearLayout linearLayout = (LinearLayout) viewToAnimate.getParent();
+                        LinearLayout linearLayout = (LinearLayout) viewToAnimate.getParent();
+                        linearLayout.setBackgroundColor(getColor(R.color.darkend_Yellow));
+
+                        char activeChar = viewToAnimate.getText().toString().toCharArray()[0];
+
+                        ArrayList<Integer> activeRepeatCountPositions = new ArrayList<>();
+
+                        int correctCharCount = 0;
+
+                        ArrayList<Integer> correctCharsPos = new ArrayList<>();
+
+                        for (int j = activeRow * letterGridArray[0].length; j < (activeRow + 1) * letterGridArray[0].length; j++) {
+                            if (tvSpaces.get(j).getText().charAt(0) == activeChar) {
+                                activeRepeatCountPositions.add(j);
+                            }
+                        }
+
+                        for (int ci = 0; ci < correct.toCharArray().length; ci++) {
+                            if (correct.toCharArray()[ci] == activeChar) {
+                                correctCharCount++;
+                                correctCharsPos.add((activeRow * letterGridArray[0].length) + ci);
+                            }
+                        }
+
+                        for (int correctPos: correctCharsPos){
+                            activeRepeatCountPositions.remove((Object) correctPos);
+                        }
+
+                        int filledCount = 0;
+
+                        for (int cpi = 0; cpi < correctCharsPos.size(); cpi++) {
+                            if (activeChar == tvSpaces.get(correctCharsPos.get(cpi)).getText().charAt(0)) {
+                                filledCount++;
+                            }
+                        }
+
+                        if (filledCount == correctCharsPos.size()){
                             linearLayout.setBackgroundColor(getColor(R.color.gray));
                         }
+
+                        int tobeReplacedCount = correctCharCount - filledCount;
+
+                        for (int ii = 0; ii < activeRepeatCountPositions.size();ii++){
+                            if (ii < tobeReplacedCount){
+                                ((LinearLayout) tvSpaces.get(activeRepeatCountPositions.get(ii)).getParent()).setBackgroundColor(getColor(R.color.darkend_Yellow));
+                            } else {
+                                ((LinearLayout) tvSpaces.get(activeRepeatCountPositions.get(ii)).getParent()).setBackgroundColor(getColor(R.color.gray));
+                            }
+                        }
                     }
+
                     counter++;
                     new Handler().postDelayed(() -> {
                         viewToAnimate.animate().withLayer()
@@ -418,7 +540,9 @@ public class MainActivity extends AppCompatActivity {
                                 ).start();
                     }, 300L * counter);
                 }
+
                 activeRow++;
+
                 if (!checkIfCorrect && activeRow == letterGridArray.length) {
                     GameOverDialogBinding gameOverDialogBinding = GameOverDialogBinding.inflate(getLayoutInflater());
                     gameOverDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
@@ -435,6 +559,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this, SplashActivity.class));
                         }
                     });
+
                     gameOverDialogBinding.btnNew.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -554,7 +679,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void postResult(float point, int noOfGuesses) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(APIInterface.BASE_URL).addConverterFactory(GsonConverterFactory.create(new Gson())).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(sharedPreferences.getString("IP", "")).addConverterFactory(GsonConverterFactory.create(new Gson())).build();
         APIInterface api = retrofit.create(APIInterface.class);
         PostResultModel postBody = new PostResultModel(name, email, seconds, noOfGuesses, point);
         api.postResult(postBody).enqueue(new Callback<ResponseBody>() {
@@ -563,13 +688,13 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     response.body().string();
                 } catch (Exception e) {
-                    Snackbar.make(binding.getRoot(), "" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    //Snackbar.make(binding.getRoot(), "" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Snackbar.make(binding.getRoot(), "" + t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                //Snackbar.make(binding.getRoot(), "" + t.getMessage(), Snackbar.LENGTH_SHORT).show();
             }
         });
     }
