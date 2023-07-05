@@ -31,24 +31,15 @@
         android:layout_weight="1"
         android:gravity="center">
 
-        <androidx.cardview.widget.CardView
+        <Button
             android:id="@+id/cvSubmit"
             android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_32sdp"
-            app:cardBackgroundColor="#5E35B1"
-            app:cardCornerRadius="@dimen/_20sdp">
-
-            <TextView
-                android:id="@+id/key_submit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:fontFamily="@font/gothambold"
-                android:gravity="center"
-                android:text="Submit"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14ssp" />
-        </androidx.cardview.widget.CardView>
+            android:layout_height="@dimen/_48sdp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_selector"
+            android:text="Submit"
+            >
+        </Button>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView

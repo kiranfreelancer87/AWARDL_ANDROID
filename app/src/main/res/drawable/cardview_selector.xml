@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <!-- Set the desired color for the pressed state -->
+            <solid android:color="#F218A4CC" />
+        </shape>
+    </item>
+
+</selector>

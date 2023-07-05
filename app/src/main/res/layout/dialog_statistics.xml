@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/_10sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/gothambold"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="STATISTICS"
+                android:textSize="@dimen/_20ssp" />
+
+            <ImageView
+                android:id="@+id/btnClose"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:src="@drawable/cross" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvPlayed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gothambold"
+                    android:text="48"
+                    android:textSize="@dimen/_14ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Played\n" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvWinningPercentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gothambold"
+                    android:text="2.1%"
+                    android:textSize="@dimen/_14ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Winning\n" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvMaxStreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gothambold"
+                    android:text="48"
+                    android:textSize="@dimen/_14ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Max\nStreak" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvCurrentStreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gothambold"
+                    android:text="48"
+                    android:textSize="@dimen/_14ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Current\nStreak" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".02" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".16"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.pandasdroid.wordlequest.VerticalProgressView
+                        android:id="@+id/verticalProgressView1"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        app:max="100"
+                        app:progress="20" />
+
+                    <TextView
+                        android:id="@+id/tvCount1"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:gravity="center|bottom"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gothambold"
+                    android:text="1"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".16"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.pandasdroid.wordlequest.VerticalProgressView
+                        android:id="@+id/verticalProgressView2"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        app:max="100"
+                        app:progress="20" />
+
+                    <TextView
+                        android:id="@+id/tvCount2"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:gravity="center|bottom"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gothambold"
+                    android:text="2"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".16"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.pandasdroid.wordlequest.VerticalProgressView
+                        android:id="@+id/verticalProgressView3"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        app:max="100"
+                        app:progress="20" />
+
+                    <TextView
+                        android:id="@+id/tvCount3"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:gravity="center|bottom"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gothambold"
+                    android:text="3"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".16"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.pandasdroid.wordlequest.VerticalProgressView
+                        android:id="@+id/verticalProgressView4"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        app:max="100"
+                        app:progress="20" />
+
+                    <TextView
+                        android:id="@+id/tvCount4"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:gravity="center|bottom"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gothambold"
+                    android:text="4"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".16"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.pandasdroid.wordlequest.VerticalProgressView
+                        android:id="@+id/verticalProgressView5"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        app:max="100"
+                        app:progress="20" />
+
+                    <TextView
+                        android:id="@+id/tvCount5"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:gravity="center|bottom"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gothambold"
+                    android:text="5"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".16"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.pandasdroid.wordlequest.VerticalProgressView
+                        android:id="@+id/verticalProgressView6"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        app:max="100"
+                        app:progress="20" />
+
+                    <TextView
+                        android:id="@+id/tvCount6"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:gravity="center|bottom"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gothambold"
+                    android:text="6"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".02" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/gothambold"
+            android:text="ATTEMPTS"
+            android:textSize="@dimen/_16ssp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
