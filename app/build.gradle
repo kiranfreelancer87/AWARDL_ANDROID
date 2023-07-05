@@ -50,11 +50,11 @@ dependencies {
     implementation "androidx.room:room-runtime:2.5.2"
     annotationProcessor "androidx.room:room-compiler:2.5.2"
 
-    /*//Firebase
+    //Firebase
     implementation platform('com.google.firebase:firebase-bom:32.1.1')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging'*/
+    implementation 'com.google.firebase:firebase-messaging'
 
     //Admob
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
