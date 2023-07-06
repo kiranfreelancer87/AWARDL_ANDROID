@@ -10,7 +10,7 @@ public class SharedPrefHelper {
     SharedPreferences sharedPreferences;
 
     public SharedPrefHelper(Context context) {
-        sharedPreferences = context.getSharedPreferences("App", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE);
     }
 
     public SharedPreferences getSharedPrefHelper() {

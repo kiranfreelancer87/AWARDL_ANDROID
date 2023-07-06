@@ -12,14 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.ads.Ad;
@@ -333,7 +329,7 @@ public class LendingActivity extends AppCompatActivity {
 
                 initializeCardSelection(dialogSettingsBinding);
 
-                SharedPreferences sharedPreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE);
                 String selectedValue = sharedPreferences.getString("selectedValue", "5");
                 if (!selectedValue.isEmpty()) {
                     // Find the corresponding card view based on the selected value
@@ -507,7 +503,7 @@ public class LendingActivity extends AppCompatActivity {
         String selectedValue = ((TextView) cardView.getChildAt(0)).getText().toString();
 
         // Save the selected value in SharedPreferences
-        SharedPreferences.Editor editor = getSharedPreferences("App", Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE).edit();
         editor.putString("selectedValue", selectedValue);
         editor.apply();
     }

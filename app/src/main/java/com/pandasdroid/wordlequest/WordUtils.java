@@ -2,7 +2,9 @@ package com.pandasdroid.wordlequest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,7 +18,6 @@ import java.util.Set;
 public class WordUtils {
     private static final String WORDS_FILENAME = "words.json";
     private static final Random RANDOM = new Random();
-    private static final String PREFS_NAME = "UsedWordsPrefs";
     private static final String USED_WORDS_KEY = "used_words";
 
     private static Set<Word> loadWords(Context context) {
@@ -88,14 +89,14 @@ public class WordUtils {
 
 
     private static void saveUsedWord(Context context, String word) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE);
         Set<String> usedWordsSet = sharedPreferences.getStringSet(USED_WORDS_KEY, new HashSet<>());
         usedWordsSet.add(word);
         sharedPreferences.edit().putStringSet(USED_WORDS_KEY, usedWordsSet).apply();
     }
 
     public static boolean isWordUsed(Context context, String word) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE);
         Set<String> usedWordsSet = sharedPreferences.getStringSet(USED_WORDS_KEY, new HashSet<>());
         return usedWordsSet.contains(word);
     }

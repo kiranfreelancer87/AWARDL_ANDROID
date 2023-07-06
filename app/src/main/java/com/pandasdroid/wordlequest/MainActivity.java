@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (getIntent() == null || getIntent().getStringExtra("correct") == null || getIntent().getStringExtra("correct").length() < 4) {
-            String selectedValue = getSharedPreferences("App", Context.MODE_PRIVATE).getString("selectedValue", "5");
+            String selectedValue = getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE).getString("selectedValue", "5");
             int wordLength = Integer.parseInt(selectedValue);
             String randomWord = WordUtils.getRandomWord(getApplicationContext(), wordLength);
             if (randomWord != null) {
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         letterGridArray = new int[6][correct.length()];
 
 
-        sharedPreferences = getSharedPreferences("AWARDL", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(GameConstants.Pref_Name, Context.MODE_PRIVATE);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
