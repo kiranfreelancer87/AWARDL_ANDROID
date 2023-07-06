@@ -1,106 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_margin="@dimen/_20sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cvCard"
-        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardBackgroundColor="@color/light_gray"
         android:layout_width="@dimen/_300sdp"
-        android:layout_height="@dimen/_150sdp">
-        <androidx.cardview.widget.CardView
-            android:layout_margin="@dimen/_2sdp"
-            app:cardCornerRadius="@dimen/_5sdp"
+        android:layout_height="@dimen/_150sdp"
+        app:cardCornerRadius="@dimen/_10sdp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|start"
-            app:cardBackgroundColor="#E3F2FD">
-            <LinearLayout
-                android:layout_gravity="center|start"
-                android:gravity="center|start"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/tvSorryMsg"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="@dimen/_15ssp"
-                    android:fontFamily="@font/gothamlight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tvCorrectWord"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="@dimen/_18ssp"
-                    android:fontFamily="@font/gothambold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:text="Better luck next time"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="@dimen/_15ssp"
-                    android:fontFamily="@font/gothamlight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tvScore"
-                    android:textSize="@dimen/_15ssp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:fontFamily="@font/gothambold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            android:gravity="center|start"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSorryMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/gothamlight"
+                android:gravity="center"
+                android:text="Sorry the word was"
+                android:textSize="@dimen/_15ssp" />
+
+            <TextView
+                android:id="@+id/tvCorrectWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="@font/gothambold"
+                android:gravity="center"
+                android:text="CORRECT"
+                android:textSize="@dimen/_18ssp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="@font/gothamlight"
+                android:gravity="center"
+                android:text="Better luck next time"
+                android:textSize="@dimen/_15ssp" />
+
+            <TextView
+                android:id="@+id/tvScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="@font/gothambold"
+                android:gravity="center"
+                android:textSize="@dimen/_15ssp" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_5sdp"
         android:gravity="center">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/dialog_gradient_rect"
-            android:orientation="vertical"
+            app:cardBackgroundColor="@color/teal_200"
+            app:cardElevation="@dimen/_2sdp"
             android:padding="@dimen/_1sdp">
 
             <LinearLayout
-                android:layout_width="@dimen/_48sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:background="#d3d3d3">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <TextView
+                <ImageView
                     android:id="@+id/btnBackToMain"
-                    android:layout_width="@dimen/_48sdp"
-                    android:layout_height="@dimen/_18sdp"
-                    android:layout_gravity="center"
-                    android:background="#d3d3d3"
-                    android:fontFamily="@font/gothambold"
-                    android:gravity="center"
-                    android:text="HOME"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
+                    android:layout_margin="@dimen/_5sdp"
+                    android:src="@drawable/home_icon"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"/>
             </LinearLayout>
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
-            android:layout_marginStart="@dimen/_24sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_24sdp"
             android:background="@drawable/dialog_gradient_rect"
             android:orientation="vertical"
             android:padding="@dimen/_1sdp">

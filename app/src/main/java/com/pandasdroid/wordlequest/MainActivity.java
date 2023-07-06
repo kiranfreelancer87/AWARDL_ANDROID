@@ -28,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -54,6 +55,8 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.pandasdroid.wordlequest.databinding.ActivityMainBinding;
 import com.pandasdroid.wordlequest.databinding.AdsContainerBinding;
+import com.pandasdroid.wordlequest.databinding.GameClosedLayoutFailureBinding;
+import com.pandasdroid.wordlequest.databinding.GameClosedLayoutSuccessBinding;
 import com.pandasdroid.wordlequest.databinding.GameOverDialogBinding;
 import com.pandasdroid.wordlequest.databinding.GameWinDialogBinding;
 import com.pandasdroid.wordlequest.databinding.HintDialogBinding;
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
     private RewardedAd adMobRewardedAds;
     private int game_type = -1;
     private boolean isFacebookFailed = false;
+    private LinearLayout llFooter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +139,12 @@ public class MainActivity extends AppCompatActivity {
             game_type = 1;
         }
 
+        correct = "APPLE";
+
         if (definition.isEmpty()) {
             definition = WordUtils.getWordDefinition(MainActivity.this, correct);
         }
+
 
         letterGridArray = new int[6][correct.length()];
 
@@ -146,12 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        Dialog dialog = new Dialog(MainActivity.this);
-        TextView tv = new TextView(MainActivity.this);
-        tv.setText(correct);
-        dialog.setContentView(tv);
-        dialog.show();
 
         database = AppDatabase.getInstance(MainActivity.this);
         historyDao = database.userDao();
@@ -327,11 +328,13 @@ public class MainActivity extends AppCompatActivity {
             rows.append(stringBuilder);
             rowsLinearLayout.addView(columnLinearLayout);
         }
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.popup_enter_animation);
+        rowsLinearLayout.startAnimation(animation);
         binding.getRoot().addView(rowsLinearLayout);
     }
 
     private void initKeyboard() {
-        LinearLayout llFooter = new LinearLayout(this);
+        llFooter = new LinearLayout(this);
         llFooter.setOrientation(LinearLayout.VERTICAL);
         llFooter.setBackgroundColor(Color.parseColor("#20FFFFFF"));
         ItemviewButtonsBinding itemviewButtonsBinding = ItemviewButtonsBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
@@ -535,6 +538,9 @@ public class MainActivity extends AppCompatActivity {
         //Keys Row 3
         llFooter.addView(llBottom3);
 
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.popup_enter_animation);
+        llFooter.startAnimation(animation);
+
         //Adding Footer View to the LinearLayout
         binding.getRoot().addView(llFooter);
     }
@@ -698,12 +704,6 @@ public class MainActivity extends AppCompatActivity {
                 activeRow++;
 
                 if (!checkIfCorrect && activeRow == letterGridArray.length) {
-                    GameOverDialogBinding gameOverDialogBinding = GameOverDialogBinding.inflate(getLayoutInflater());
-                    gameOverDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
-                    gameOverDialogBinding.tvSorryMsg.setText(MessageFormat.format("Sorry {0},\nthe word was:", ""));
-                    gameOverDialogBinding.tvCorrectWord.setText(correct);
-                    gameOverDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", "10"));
-
                     //Set History
                     HistoryEntity historyEntity = new HistoryEntity();
                     historyEntity.game_time = System.currentTimeMillis();
@@ -715,48 +715,26 @@ public class MainActivity extends AppCompatActivity {
                     historyEntity.word = correct;
                     historyEntity.hint_count = hintList.size();
                     historyDao.insert(historyEntity);
-                    Dialog dialog1 = new Dialog(this);
-                    gameOverDialogBinding.btnBackToMain.setOnClickListener(new View.OnClickListener() {
+
+                    llFooter.removeAllViews();
+
+                    GameClosedLayoutFailureBinding buttonsBinding = GameClosedLayoutFailureBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
+                    Animation animation = AnimationUtils.loadAnimation(this, R.anim.popup_enter_animation);
+                    buttonsBinding.getRoot().startAnimation(animation);
+                    llFooter.addView(buttonsBinding.getRoot());
+                    buttonsBinding.btnHome.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             finish();
                         }
                     });
-
-                    gameOverDialogBinding.btnNew.setOnClickListener(new View.OnClickListener() {
+                    buttonsBinding.btnRetry.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            dialog1.dismiss();
                             restartGame();
                         }
                     });
-                    //gameOverDialogBinding.getRoot().setOnClickListener(view -> dialog1.dismiss());
-                    dialog1.setContentView(gameOverDialogBinding.getRoot());
-                    dialog1.setCancelable(false);
-                    Window dWin = dialog1.getWindow();
-                    dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    dWin.setBackgroundDrawable(null);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                        binding.getRoot().setRenderEffect(RenderEffect.createBlurEffect(30f, //radius X
-                                30f, //Radius Y
-                                Shader.TileMode.MIRROR// X=CLAMP,DECAL,MIRROR,REPEAT
-                        ));
-                    }
-                    dialog1.show();
-
-                    dialog1.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                binding.getRoot().setRenderEffect(null);
-                            }
-                        }
-                    });
                 } else if (checkIfCorrect) {
-                    GameWinDialogBinding gameWinDialogBinding = GameWinDialogBinding.inflate(getLayoutInflater());
-                    gameWinDialogBinding.cvCard.setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_gradient));
-                    gameWinDialogBinding.tvWinMsg.setText(MessageFormat.format("You scored {0}!", calculateScore(correct, 6, 3, 1)));
-
                     //Set History
                     HistoryEntity historyEntity = new HistoryEntity();
                     historyEntity.game_time = System.currentTimeMillis();
@@ -769,57 +747,26 @@ public class MainActivity extends AppCompatActivity {
                     historyEntity.hint_count = hintList.size();
                     historyDao.insert(historyEntity);
 
-                    float point = 0.0f;
-                    long time_diff = 0;
+                    llFooter.removeAllViews();
 
-                    switch (activeRow) {
-                        case 1 -> point = time_diff + 300;
-                        case 2 -> point = time_diff + 200;
-                        case 3 -> point = time_diff + 132;
-                        case 4 -> point = time_diff + 100;
-                        case 5 -> point = time_diff + 80;
-                        case 6 -> point = time_diff + 66;
-                    }
-
-                    gameWinDialogBinding.tvScore.setText(MessageFormat.format("Score: {0}", point));
-                    //postResult(point, activeRow);
-                    Dialog dialog1 = new Dialog(this);
-                    gameWinDialogBinding.btnBackToMain.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog1.dismiss();
-                            restartGame();
-                        }
-                    });
-                    gameWinDialogBinding.btnNew.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog1.dismiss();
-                            restartGame();
-                        }
-                    });
-                    //gameWinDialogBinding.getRoot().setOnClickListener(view -> dialog1.dismiss());
-                    dialog1.setContentView(gameWinDialogBinding.getRoot());
-                    dialog1.setCancelable(false);
-                    dialog1.show();
-                    Window dWin = dialog1.getWindow();
-                    dWin.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    dWin.setBackgroundDrawable(null);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                        binding.getRoot().setRenderEffect(RenderEffect.createBlurEffect(30f, //radius X
-                                30f, //Radius Y
-                                Shader.TileMode.MIRROR// X=CLAMP,DECAL,MIRROR,REPEAT
-                        ));
-                    }
-
-                    dialog1.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                binding.getRoot().setRenderEffect(null);
+                    if (llFooter != null) {
+                        GameClosedLayoutSuccessBinding buttonsBinding = GameClosedLayoutSuccessBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
+                        llFooter.addView(buttonsBinding.getRoot());
+                        Animation animation = AnimationUtils.loadAnimation(this, R.anim.popup_enter_animation);
+                        buttonsBinding.getRoot().startAnimation(animation);
+                        buttonsBinding.btnHome.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
                             }
-                        }
-                    });
+                        });
+                        buttonsBinding.btnNext.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                recreate();
+                            }
+                        });
+                    }
                 }
             }
         } else if (v.getTag().toString().equals("Back")) {

@@ -41,18 +41,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int pos) {
         final int position = pos;
-        if (pos == 0) {
-            holder.itemView.post(new Runnable() {
-                @Override
-                public void run() {
-                    listener.onSuccessGridSize(holder.itemView.getWidth());
-                }
-            });
-        }
 
-        int day = data.get(position) == null ? 0 : data.get(position);
+        int day = data.get(position) == null ? -1 : data.get(position);
 
-        if (day == 0) {
+        if (day == -1) {
             holder.itemView.setVisibility(View.GONE);
         }
 
@@ -61,7 +53,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         int day_ = calendar.get(Calendar.DAY_OF_MONTH);
-        if (day_ < day && calendar.get(Calendar.MONTH) - 1 == month) {
+        if (day_ < day && calendar.get(Calendar.MONTH) == month) {
             holder.calendarItemBinding.dayTextView.setTextColor(Color.parseColor("#D3D3D3"));
         } else {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +61,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 public void onClick(View view) {
                     int prevPos = selectedPos;
                     selectedPos = position;
-                    if (prevPos != -1){
+                    if (prevPos != -1) {
                         notifyItemChanged(prevPos);
                     }
                     listener.onSelectDate(year, month, data.get(position));
@@ -85,20 +77,20 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             SharedPrefHelper sharedPrefHelper = new SharedPrefHelper(holder.itemView.getContext());
 
             Calendar calendar1 = Calendar.getInstance();
-            calendar1.set(year, month - 1, day);
+            calendar1.set(year, month, day);
 
             // Get the date in the format "yyyy-MM-dd"
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             String formattedDate = dateFormat.format(calendar1.getTime());
             if (sharedPrefHelper.getSharedPrefHelper().contains(formattedDate)) {
-                if (position == selectedPos){
+                if (position == selectedPos) {
                     holder.calendarItemBinding.dayTextView.setTextColor(Color.WHITE);
                     holder.calendarItemBinding.cvDate.setCardBackgroundColor(Color.parseColor("#FF00796B"));
                 } else {
                     holder.calendarItemBinding.dayTextView.setTextColor(Color.parseColor("#FF00796B"));
                 }
             } else {
-                if (position == selectedPos){
+                if (position == selectedPos) {
                     holder.calendarItemBinding.dayTextView.setTextColor(Color.WHITE);
                     holder.calendarItemBinding.cvDate.setCardBackgroundColor(Color.parseColor("#D32F2F"));
                 } else {

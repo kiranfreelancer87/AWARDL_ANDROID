@@ -6,13 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +21,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -55,7 +55,7 @@ public class LendingActivity extends AppCompatActivity {
 
     private RewardedAd rewardedAd;
     private boolean earnedReward = false;
-    private android.app.AlertDialog daily_words_dialog;
+    private AlertDialog daily_words_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,38 +72,35 @@ public class LendingActivity extends AppCompatActivity {
         HistoryDao historyDao = database.userDao();
         historyList = historyDao.getHistory();
 
+        binding.btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LendingActivity.this, MainActivity.class));
+            }
+        });
+
         binding.btnWordOfTheDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogWordOfTheDayBinding wotBinding = DialogWordOfTheDayBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
                 AlertDialog.Builder dialog = new AlertDialog.Builder(LendingActivity.this);
+
                 // Set up RecyclerView with GridLayoutManager
-                GridLayoutManager layoutManager = new GridLayoutManager(LendingActivity.this, 7);
+                GridLayoutManager layoutManager = new NoScrollLayoutManager(LendingActivity.this, 7, RecyclerView.VERTICAL, false);
                 wotBinding.rvDailyWords.setLayoutManager(layoutManager);
+
+                //Set Headers
+                wotBinding.rvHeaderLayout.setLayoutManager(new NoScrollLayoutManager(LendingActivity.this, 7, LinearLayoutManager.VERTICAL, false));
+                wotBinding.rvHeaderLayout.setAdapter(new CalendarHeaderAdapter());
+
 
                 final int[] counter = {0};
 
                 // Set up CalendarAdapter and attach it to RecyclerView
-                CalendarAdapter calendarAdapter = new CalendarAdapter(getCalendarData(new GetMonthYear(counter).getMonth() - 1, new GetMonthYear(counter).getYear()), new GetMonthYear(counter).getMonth() - 1, new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
+                CalendarAdapter calendarAdapter = new CalendarAdapter(new GetMonthYear(counter).getMonthDays(), new GetMonthYear(counter).getMonth(), new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
                     @Override
                     public void onSuccessGridSize(int size) {
-                        //Build Header
-                        LinearLayout weekdaysLayout = wotBinding.llHeader;
 
-                        // Define the week days
-                        String[] weekDays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-
-                        for (String day : weekDays) {
-                            TextView textView = new TextView(LendingActivity.this);
-                            textView.setText(day);
-                            textView.setTextColor(getResources().getColor(R.color.black));
-                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                            textView.setTypeface(Typeface.create("gothambold", Typeface.BOLD));
-                            textView.setGravity(Gravity.CENTER);
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size, size);
-                            textView.setLayoutParams(layoutParams);
-                            weekdaysLayout.addView(textView);
-                        }
                     }
 
                     @Override
@@ -111,7 +108,7 @@ public class LendingActivity extends AppCompatActivity {
                         // Get the date in the format "2023-01-01"
                         // Set the date in the Calendar object
                         Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, month - 1, day);
+                        calendar.set(year, month, day);
 
                         // Get the date in the format "yyyy-MM-dd"
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -120,7 +117,7 @@ public class LendingActivity extends AppCompatActivity {
                         // Get the date in the format "yyyy-MM-dd"
                         SharedPrefHelper sharedPrefHelper = new SharedPrefHelper(LendingActivity.this);
                         if (!sharedPrefHelper.getSharedPrefHelper().contains(formattedDate)) {
-                            wotBinding.ivAds.setVisibility(View.VISIBLE);
+                            wotBinding.ivAds.setImageDrawable(ContextCompat.getDrawable(LendingActivity.this, R.drawable.advertising));
                             wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -146,7 +143,7 @@ public class LendingActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            wotBinding.ivAds.setVisibility(View.GONE);
+                            wotBinding.ivAds.setImageDrawable(null);
                             wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -156,18 +153,18 @@ public class LendingActivity extends AppCompatActivity {
                         }
                     }
                 });
-
                 wotBinding.rvDailyWords.setAdapter(calendarAdapter);
+                wotBinding.rvDailyWords.getAdapter().notifyDataSetChanged();
 
-                wotBinding.monthTextView.setText(new GetMonthYear(counter).getMonthName() + " " + new GetMonthYear(counter).getYear());
+                wotBinding.monthTextView.setText(new GetMonthYear(counter).getMonthNameAndYear());
                 dialog.setView(wotBinding.getRoot());
-                AlertDialog alert = dialog.create();
+                daily_words_dialog = dialog.create();
 
 
                 wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        alert.dismiss();
+                        daily_words_dialog.dismiss();
                     }
                 });
 
@@ -178,9 +175,9 @@ public class LendingActivity extends AppCompatActivity {
                             return;
                         }
                         counter[0]--;
-                        wotBinding.monthTextView.setText(new GetMonthYear(counter).getMonthName() + " " + new GetMonthYear(counter).getYear());
+                        wotBinding.monthTextView.setText(new GetMonthYear(counter).getMonthNameAndYear());
                         // Set up CalendarAdapter and attach it to RecyclerView
-                        CalendarAdapter calendarAdapter = new CalendarAdapter(getCalendarData(new GetMonthYear(counter).getMonth() - 1, new GetMonthYear(counter).getYear()), new GetMonthYear(counter).getMonth() - 1, new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
+                        CalendarAdapter calendarAdapter = new CalendarAdapter(new GetMonthYear(counter).getMonthDays(), new GetMonthYear(counter).getMonth(), new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
                             @Override
                             public void onSuccessGridSize(int size) {
                             }
@@ -190,7 +187,7 @@ public class LendingActivity extends AppCompatActivity {
                                 // Get the date in the format "2023-01-01"
                                 // Set the date in the Calendar object
                                 Calendar calendar = Calendar.getInstance();
-                                calendar.set(year, month - 1, day);
+                                calendar.set(year, month, day);
 
                                 // Get the date in the format "yyyy-MM-dd"
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -199,7 +196,8 @@ public class LendingActivity extends AppCompatActivity {
                                 // Get the date in the format "yyyy-MM-dd"
                                 SharedPrefHelper sharedPrefHelper = new SharedPrefHelper(LendingActivity.this);
                                 if (!sharedPrefHelper.getSharedPrefHelper().contains(formattedDate)) {
-                                    wotBinding.ivAds.setVisibility(View.VISIBLE);
+                                    wotBinding.ivAds.setImageDrawable(ContextCompat.getDrawable(LendingActivity.this, R.drawable.advertising));
+
                                     wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -225,7 +223,7 @@ public class LendingActivity extends AppCompatActivity {
                                         }
                                     });
                                 } else {
-                                    wotBinding.ivAds.setVisibility(View.GONE);
+                                    wotBinding.ivAds.setImageDrawable(null);
                                     wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -248,9 +246,9 @@ public class LendingActivity extends AppCompatActivity {
                         }
                         if (counter[0] < 0) {
                             counter[0]++;
-                            wotBinding.monthTextView.setText(new GetMonthYear(counter).getMonthName() + " " + new GetMonthYear(counter).getYear());
+                            wotBinding.monthTextView.setText(new GetMonthYear(counter).getMonthNameAndYear());
                             // Set up CalendarAdapter and attach it to RecyclerView
-                            CalendarAdapter calendarAdapter = new CalendarAdapter(getCalendarData(new GetMonthYear(counter).getMonth() - 1, new GetMonthYear(counter).getYear()), new GetMonthYear(counter).getMonth() - 1, new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
+                            CalendarAdapter calendarAdapter = new CalendarAdapter(new GetMonthYear(counter).getMonthDays(), new GetMonthYear(counter).getMonth(), new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
                                 @Override
                                 public void onSuccessGridSize(int size) {
                                 }
@@ -260,7 +258,7 @@ public class LendingActivity extends AppCompatActivity {
                                     // Get the date in the format "2023-01-01"
                                     // Set the date in the Calendar object
                                     Calendar calendar = Calendar.getInstance();
-                                    calendar.set(year, month - 1, day);
+                                    calendar.set(year, month, day);
 
                                     // Get the date in the format "yyyy-MM-dd"
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -270,7 +268,8 @@ public class LendingActivity extends AppCompatActivity {
                                     // Get the date in the format "yyyy-MM-dd"
                                     SharedPrefHelper sharedPrefHelper = new SharedPrefHelper(LendingActivity.this);
                                     if (!sharedPrefHelper.getSharedPrefHelper().contains(formattedDate)) {
-                                        wotBinding.ivAds.setVisibility(View.VISIBLE);
+                                        wotBinding.ivAds.setImageDrawable(ContextCompat.getDrawable(LendingActivity.this, R.drawable.advertising));
+
                                         wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -295,7 +294,7 @@ public class LendingActivity extends AppCompatActivity {
                                             }
                                         });
                                     } else {
-                                        wotBinding.ivAds.setVisibility(View.GONE);
+                                        wotBinding.ivAds.setImageDrawable(null);
                                         wotBinding.btnStart.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -309,13 +308,13 @@ public class LendingActivity extends AppCompatActivity {
                         }
                     }
                 });
-                Window dWin = alert.getWindow();
+                Window dWin = daily_words_dialog.getWindow();
                 if (dWin != null) {
                     dWin.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                     dWin.setWindowAnimations(R.style.DialogAnimation);
                     dWin.setBackgroundDrawable(null);
                 }
-                alert.show();
+                daily_words_dialog.show();
             }
         });
         binding.ivStatics.setOnClickListener(new View.OnClickListener() {
@@ -330,7 +329,7 @@ public class LendingActivity extends AppCompatActivity {
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(LendingActivity.this);
                 DialogSettingsBinding dialogSettingsBinding = DialogSettingsBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
                 builder.setView(dialogSettingsBinding.getRoot());
-                daily_words_dialog = builder.create();
+                android.app.AlertDialog dialog = builder.create();
 
                 initializeCardSelection(dialogSettingsBinding);
 
@@ -363,8 +362,8 @@ public class LendingActivity extends AppCompatActivity {
                 }
 
 
-                daily_words_dialog.show();
-                Window dWin = daily_words_dialog.getWindow();
+                dialog.show();
+                Window dWin = dialog.getWindow();
                 if (dWin != null) {
                     dWin.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                     dWin.setWindowAnimations(R.style.DialogAnimation);
@@ -512,28 +511,4 @@ public class LendingActivity extends AppCompatActivity {
         editor.putString("selectedValue", selectedValue);
         editor.apply();
     }
-
-
-    private List<Integer> getCalendarData(int month, int year) {
-        List<Integer> calendarData = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-
-        int maximumDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        // Add empty cells for the days before the start of the month
-        for (int i = 0; i < 35 - maximumDayOfMonth; i++) {
-            calendarData.add(null);
-        }
-
-        // Add the day numbers for each cell in the calendar
-        for (int i = 1; i <= maximumDayOfMonth; i++) {
-            calendarData.add(i);
-        }
-
-        return calendarData;
-    }
-
 }

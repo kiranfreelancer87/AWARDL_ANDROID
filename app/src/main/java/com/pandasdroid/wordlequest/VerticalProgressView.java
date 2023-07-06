@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
+
 public class VerticalProgressView extends View {
 
     private int progress;
@@ -35,8 +37,8 @@ public class VerticalProgressView extends View {
 
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.VerticalProgressView);
-            int progressColor = typedArray.getColor(R.styleable.VerticalProgressView_progressColor, getResources().getColor(R.color.green));
-            int backgroundColor = typedArray.getColor(R.styleable.VerticalProgressView_backgroundColor, getResources().getColor(R.color.light_gray));
+            int progressColor = typedArray.getColor(R.styleable.VerticalProgressView_progressColor, ContextCompat.getColor(getContext(), R.color.green));
+            int backgroundColor = typedArray.getColor(R.styleable.VerticalProgressView_backgroundColor, ContextCompat.getColor(getContext(), R.color.light_gray));
             progress = typedArray.getInt(R.styleable.VerticalProgressView_progress, 0);
             max = typedArray.getInt(R.styleable.VerticalProgressView_max, 100);
             typedArray.recycle();
@@ -44,8 +46,8 @@ public class VerticalProgressView extends View {
             progressPaint.setColor(progressColor);
             backgroundPaint.setColor(backgroundColor);
         } else {
-            progressPaint.setColor(getResources().getColor(R.color.light_gray));
-            backgroundPaint.setColor(getResources().getColor(R.color.green));
+            progressPaint.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+            backgroundPaint.setColor(ContextCompat.getColor(getContext(), R.color.green));
         }
     }
 
