@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:gravity="center">
 
     <androidx.cardview.widget.CardView
-        android:foregroundGravity="center"
         android:layout_width="@dimen/_230sdp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/_10sdp"
+        android:foregroundGravity="center"
         android:paddingBottom="@dimen/_10sdp"
         app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="@dimen/_3sdp">
 
         <LinearLayout
-            android:padding="@dimen/_10sdp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
             android:gravity="center|top"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"

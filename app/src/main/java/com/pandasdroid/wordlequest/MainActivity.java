@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,10 @@ import com.facebook.ads.AdView;
 import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.ads.RewardedVideoAd;
 import com.facebook.ads.RewardedVideoAdListener;
+import com.google.android.ads.nativetemplates.NativeTemplateStyle;
+import com.google.android.ads.nativetemplates.TemplateView;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -50,9 +55,15 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.pandasdroid.wordlequest.GameConstants;
+import com.pandasdroid.wordlequest.MyApplication;
+import com.pandasdroid.wordlequest.R;
+import com.pandasdroid.wordlequest.WordUtils;
 import com.pandasdroid.wordlequest.databinding.ActivityMainBinding;
 import com.pandasdroid.wordlequest.databinding.AdsContainerBinding;
 import com.pandasdroid.wordlequest.databinding.GameClosedLayoutFailureBinding;
@@ -139,8 +150,6 @@ public class MainActivity extends AppCompatActivity {
             game_type = 1;
         }
 
-        correct = "APPLE";
-
         if (definition.isEmpty()) {
             definition = WordUtils.getWordDefinition(MainActivity.this, correct);
         }
@@ -169,12 +178,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         initGame();
+
+
     }
 
     private void loadAdmobRewardedAds() {
 
         AdRequest adRequest = new AdRequest.Builder().build();
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", adRequest, new RewardedAdLoadCallback() {
+        RewardedAd.load(this, GameConstants.RewardedVideoAdsID, adRequest, new RewardedAdLoadCallback() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 adMobRewardedAds = null;
@@ -223,32 +234,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void setWord() {
         ItemviewTopBinding itemviewTopBinding = ItemviewTopBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
-        binding.getRoot().addView(itemviewTopBinding.getRoot());
+        itemviewTopBinding.tvLevel.setTextColor(historyDao.getHistory().size());
+        binding.mainContainer.addView(itemviewTopBinding.getRoot());
+
         itemviewTopBinding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showHowToPlayDialog();
             }
         });
-        AdSettings.addTestDevice("681e317c-c93e-43ce-a887-756044400498");
+
+        itemviewTopBinding.ivStatics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StatisticsBuilder.buildStatistics(historyDao.getHistory(), MainActivity.this);
+            }
+        });
+
         LinearLayout adLinearlayout = new LinearLayout(this);
         LinearLayout.LayoutParams ad_lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ad_lp.setMargins(0, 5, 0, 20);
         adLinearlayout.setLayoutParams(ad_lp);
-        /*AdView adView = new AdView(this, "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID", AdSize.BANNER_HEIGHT_50);
-        // Add the ad view to your activity layout
-        adView.loadAd();
-        adLinearlayout.addView(adView);
-        // Request an ad
-        adView.loadAd();*/
-
 
         if (MyApplication.isAdmobInitialized) {
             loadAdmobRewardedAds();
         }
 
 
-        binding.getRoot().addView(adLinearlayout);
+        binding.mainContainer.addView(adLinearlayout);
     }
 
     private void restartGame() {
@@ -256,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
         activePosition = 0;
         activeRow = 0;
         tvSpaces.clear();
-        binding.getRoot().removeAllViews();
-        binding.getRoot().invalidate();
+        binding.mainContainer.removeAllViews();
+        binding.mainContainer.invalidate();
         setWordGridAndKeyboard();
     }
 
@@ -265,8 +278,30 @@ public class MainActivity extends AppCompatActivity {
         setWord();
         initGrid();
         initKeyboard();
-        AdsContainerBinding adsContainerBinding = AdsContainerBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
-        binding.getRoot().addView(adsContainerBinding.getRoot());
+
+        AdLoader adLoader = new AdLoader.Builder(this, GameConstants.NativeAdId).forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+            @Override
+            public void onNativeAdLoaded(NativeAd nativeAd) {
+                NativeTemplateStyle styles = new NativeTemplateStyle.Builder().build();
+                binding.myTemplate.setVisibility(View.VISIBLE);
+                TemplateView template = binding.myTemplate;
+                template.setStyles(styles);
+                template.setNativeAd(nativeAd);
+            }
+        }).withAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Handle the failure by logging, altering the UI, and so on.
+            }
+        }).withNativeAdOptions(new NativeAdOptions.Builder()
+                // Methods in the NativeAdOptions.Builder class can be
+                // used here to specify individual options settings.
+                .build()).build();
+
+        adLoader.loadAd(new AdRequest.Builder().build());
+
+        Log.wtf("Correct...", correct);
+
     }
 
     private void initGrid() {
@@ -330,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.popup_enter_animation);
         rowsLinearLayout.startAnimation(animation);
-        binding.getRoot().addView(rowsLinearLayout);
+        binding.mainContainer.addView(rowsLinearLayout);
     }
 
     private void initKeyboard() {
@@ -542,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
         llFooter.startAnimation(animation);
 
         //Adding Footer View to the LinearLayout
-        binding.getRoot().addView(llFooter);
+        binding.mainContainer.addView(llFooter);
     }
 
     private void giveHint() {
@@ -616,7 +651,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initOnClick(View v) {
-        Log.wtf("InitOnClick", "" + v.getTag());
 
         if (v.getTag().toString().equals("Enter")) {
             if (activePosition < (activeRow + 1) * letterGridArray[0].length) {
@@ -631,6 +665,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = activeRow * letterGridArray[0].length; i < (activeRow + 1) * letterGridArray[0].length; i++) {
                     TextView viewToAnimate = tvSpaces.get(i);
+                    viewToAnimate.setTextColor(Color.WHITE);
 
                     if (!(correct.toCharArray()[counter] == viewToAnimate.getText().toString().toCharArray()[0])) {
                         checkIfCorrect = false;
@@ -722,6 +757,7 @@ public class MainActivity extends AppCompatActivity {
                     Animation animation = AnimationUtils.loadAnimation(this, R.anim.popup_enter_animation);
                     buttonsBinding.getRoot().startAnimation(animation);
                     llFooter.addView(buttonsBinding.getRoot());
+                    buttonsBinding.tvCorrect.setText(correct);
                     buttonsBinding.btnHome.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -773,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
             if (activePosition > 0 && activePosition > (activeRow * letterGridArray[0].length)) {
                 activePosition--;
                 tvSpaces.get(activePosition).setText("");
+                tvSpaces.get(activePosition).setTextColor(Color.parseColor("#56575E"));
                 scaleDownView(tvSpaces.get(activePosition), 1f, 0f);
             }
         } else if (activePosition < tvSpaces.size() && activePosition < ((activeRow + 1) * letterGridArray[0].length)) {
@@ -783,7 +820,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void loadFacebookRewardedVideoAd() {
-        rewardedVideoAd = new RewardedVideoAd(this, "YOUR_PLACEMENT_ID");
+        rewardedVideoAd = new RewardedVideoAd(this, GameConstants.FacebookRewardedAdsID);
         RewardedVideoAdListener rewardedVideoAdListener = new RewardedVideoAdListener() {
             @Override
             public void onError(Ad ad, AdError error) {

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,16 +24,23 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.ads.RewardedVideoAd;
 import com.facebook.ads.RewardedVideoAdListener;
+import com.google.android.ads.nativetemplates.NativeTemplateStyle;
+import com.google.android.ads.nativetemplates.TemplateView;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.pandasdroid.wordlequest.databinding.ActivityLendingBinding;
 import com.pandasdroid.wordlequest.databinding.DialogSettingsBinding;
 import com.pandasdroid.wordlequest.databinding.DialogWordOfTheDayBinding;
+import com.pandasdroid.wordlequest.databinding.HintDialogBinding;
 import com.pandasdroid.wordlequest.room.AppDatabase;
 import com.pandasdroid.wordlequest.room.HistoryDao;
 import com.pandasdroid.wordlequest.room.HistoryEntity;
@@ -58,6 +66,38 @@ public class LendingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLendingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.ivHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showHowToPlayDialog();
+            }
+        });
+
+        /*AdLoader adLoader = new AdLoader.Builder(this, GameConstants.NativeAdId)
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+                    @Override
+                    public void onNativeAdLoaded(NativeAd nativeAd) {
+                        NativeTemplateStyle styles = new NativeTemplateStyle.Builder().build();
+                        binding.myTemplate.setVisibility(View.VISIBLE);
+                        TemplateView template = binding.myTemplate;
+                        template.setStyles(styles);
+                        template.setNativeAd(nativeAd);
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError adError) {
+                        // Handle the failure by logging, altering the UI, and so on.
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
+
+        adLoader.loadAd(new AdRequest.Builder().build());*/
 
         // Load rewarded ad
         loadRewardedAd();
@@ -369,13 +409,44 @@ public class LendingActivity extends AppCompatActivity {
         });
     }
 
+    private void showHowToPlayDialog() {
+        HintDialogBinding hintDialogBinding = HintDialogBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
+        androidx.appcompat.app.AlertDialog.Builder dialog_builder = new androidx.appcompat.app.AlertDialog.Builder(LendingActivity.this);
+        androidx.appcompat.app.AlertDialog dialog = dialog_builder.create();
+
+        dialog.setView(hintDialogBinding.getRoot());
+
+        dialog.setCancelable(false);
+
+        hintDialogBinding.btnClose.setOnClickListener((v) -> {
+            dialog.dismiss();
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+
+        //Show Dialog on Success Loading Words
+        dialog.show();
+        Window dWin = dialog.getWindow();
+        if (dWin != null) {
+            dWin.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            dWin.setWindowAnimations(R.style.DialogAnimation);
+            dWin.setBackgroundDrawable(null);
+        }
+    }
+
+
     private CardView selectedCard;
 
 
     private RewardedVideoAd rewardedVideoAd;
 
     void loadFacebookRewardedVideoAd() {
-        rewardedVideoAd = new RewardedVideoAd(this, "YOUR_PLACEMENT_ID");
+        rewardedVideoAd = new RewardedVideoAd(this, GameConstants.FacebookRewardedAdsID);
         RewardedVideoAdListener rewardedVideoAdListener = new RewardedVideoAdListener() {
             @Override
             public void onError(Ad ad, AdError error) {
@@ -411,11 +482,10 @@ public class LendingActivity extends AppCompatActivity {
 
     private void loadRewardedAd() {
         // Replace with your own ad unit ID
-        String adUnitId = "ca-app-pub-3940256099942544/5224354917";
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
-        RewardedAd.load(this, adUnitId, adRequest, new RewardedAdLoadCallback() {
+        RewardedAd.load(this, GameConstants.RewardedVideoAdsID, adRequest, new RewardedAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                 LendingActivity.this.rewardedAd = rewardedAd;
