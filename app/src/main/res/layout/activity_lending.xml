@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center|top"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/dialog_card_background"
     tools:context=".LendingActivity">
 
     <LinearLayout
@@ -98,10 +98,10 @@
             android:orientation="vertical">
 
             <ImageView
-                android:src="@drawable/rectangular"
-                android:scaleType="fitXY"
                 android:layout_width="@dimen/_300sdp"
-                android:layout_height="@dimen/_150sdp"/>
+                android:layout_height="@dimen/_150sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/rectangular" />
 
         </LinearLayout>
 

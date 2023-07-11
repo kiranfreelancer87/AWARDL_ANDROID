@@ -129,14 +129,12 @@ public class LendingActivity extends AppCompatActivity {
                 wotBinding.rvHeaderLayout.setLayoutManager(new NoScrollLayoutManager(LendingActivity.this, 7, LinearLayoutManager.VERTICAL, false));
                 wotBinding.rvHeaderLayout.setAdapter(new CalendarHeaderAdapter());
 
-
                 final int[] counter = {0};
 
                 // Set up CalendarAdapter and attach it to RecyclerView
                 CalendarAdapter calendarAdapter = new CalendarAdapter(new GetMonthYear(counter).getMonthDays(), new GetMonthYear(counter).getMonth(), new GetMonthYear(counter).getYear(), new MonthAdapterListener() {
                     @Override
                     public void onSuccessGridSize(int size) {
-
                     }
 
                     @Override
@@ -175,6 +173,8 @@ public class LendingActivity extends AppCompatActivity {
                                                 }
                                             }
                                         });
+                                    } else {
+                                        startNextActivity(wordData, formattedDate);
                                     }
                                 }
                             });
@@ -189,6 +189,7 @@ public class LendingActivity extends AppCompatActivity {
                         }
                     }
                 });
+
                 wotBinding.rvDailyWords.setAdapter(calendarAdapter);
                 wotBinding.rvDailyWords.getAdapter().notifyDataSetChanged();
 
@@ -344,13 +345,15 @@ public class LendingActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                daily_words_dialog.show();
+
                 Window dWin = daily_words_dialog.getWindow();
                 if (dWin != null) {
                     dWin.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                     dWin.setWindowAnimations(R.style.DialogAnimation);
                     dWin.setBackgroundDrawable(null);
                 }
-                daily_words_dialog.show();
             }
         });
         binding.ivStatics.setOnClickListener(new View.OnClickListener() {
@@ -365,7 +368,15 @@ public class LendingActivity extends AppCompatActivity {
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(LendingActivity.this);
                 DialogSettingsBinding dialogSettingsBinding = DialogSettingsBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
                 builder.setView(dialogSettingsBinding.getRoot());
+
                 android.app.AlertDialog dialog = builder.create();
+
+                dialogSettingsBinding.close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
 
                 initializeCardSelection(dialogSettingsBinding);
 

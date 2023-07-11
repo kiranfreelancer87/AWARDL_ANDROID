@@ -6,11 +6,11 @@
     android:layout_height="@dimen/_30sdp"
     android:layout_gravity="center"
     android:layout_marginStart="@dimen/_2sdp"
-    android:layout_marginBottom="@dimen/_2sdp"
     android:layout_marginTop="@dimen/_2sdp"
+    android:layout_marginBottom="@dimen/_2sdp"
     android:gravity="center"
-    app:cardElevation="@dimen/_2sdp"
-    app:cardCornerRadius="@dimen/_5sdp">
+    app:cardCornerRadius="@dimen/_5sdp"
+    app:cardElevation="@dimen/_2sdp">
 
     <LinearLayout
         android:layout_width="@dimen/_30sdp"

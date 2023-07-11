@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:layout_margin="@dimen/_10sdp"
     android:gravity="center"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/dialog_card_background"
     app:cardCornerRadius="@dimen/_10sdp">
 
     <LinearLayout

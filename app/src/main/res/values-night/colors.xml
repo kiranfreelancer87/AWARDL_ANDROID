@@ -25,5 +25,6 @@
     <color name="gnt_gray">#808080</color>
     <color name="gnt_outline">#E0E0E0</color>
 
-    <color name="dialog_card_background">#FFFFFF</color>
+    <color name="dialog_card_background">#000000</color>
+
 </resources>
