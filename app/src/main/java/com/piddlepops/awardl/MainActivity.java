@@ -55,6 +55,7 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private Dialog dialog;
 
     private SharedPreferences sharedPreferences;
-
+    private LinkedList<KeyboardViewBinding> letterViewBindingList = new LinkedList<>();
 
     public void runTimer() {
 
@@ -316,16 +317,21 @@ public class MainActivity extends AppCompatActivity {
     private void initFooter() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        ImageView imageView = new ImageView(this);
+        /*ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ViewGroup.LayoutParams((int) (displayMetrics.widthPixels / 6.5), (int) (displayMetrics.widthPixels / 6.5)));
-        imageView.setImageResource(R.drawable.custom_made_by_piddlepops);
+        imageView.setImageResource(R.drawable.custom_made_by_piddlepops);*/
+        TextView textView = new TextView(this);
+        textView.setTextColor(Color.BLACK);
+        textView.setText("Custom made by piddlepops");
+        textView.setGravity(Gravity.CENTER);
+        textView.setTypeface(ResourcesCompat.getFont(this, R.font.gothamlight));
 
         LinearLayout v = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         v.setGravity(Gravity.BOTTOM | Gravity.CENTER);
         v.setOrientation(LinearLayout.VERTICAL);
         v.setLayoutParams(lp);
-        v.addView(imageView);
+        v.addView(textView);
         binding.getRoot().addView(v);
     }
 
@@ -389,6 +395,7 @@ public class MainActivity extends AppCompatActivity {
                 letterViewBinding.tvLetter.setText(String.valueOf(keyBoards[i]));
                 llBottom.addView(letterViewBinding.getRoot());
                 v.setOnClickListener(this::initOnClick);
+                letterViewBindingList.add(letterViewBinding);
             } else if (i < 19) {
                 KeyboardViewBinding letterViewBinding = KeyboardViewBinding.inflate(getLayoutInflater());
                 letterViewBinding.tvLetter.setText(String.valueOf(keyBoards[i]));
@@ -396,6 +403,7 @@ public class MainActivity extends AppCompatActivity {
                 v.setTag(keyBoards[i]);
                 llBottom2.addView(letterViewBinding.getRoot());
                 v.setOnClickListener(this::initOnClick);
+                letterViewBindingList.add(letterViewBinding);
             } else {
                 if (i == 19) {
                     KeyboardEnterButtonBinding keyboardEnterButtonBinding = KeyboardEnterButtonBinding.inflate(getLayoutInflater());
@@ -410,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
                 letterViewBinding.tvLetter.setText(String.valueOf(keyBoards[i]));
                 llBottom3.addView(letterViewBinding.getRoot());
                 v.setOnClickListener(this::initOnClick);
+                letterViewBindingList.add(letterViewBinding);
                 if (i == keyBoards.length - 1) {
                     KeyboardBackButtonBinding keyboardBackButtonBinding = KeyboardBackButtonBinding.inflate(getLayoutInflater());
                     v = keyboardBackButtonBinding.getRoot();
@@ -448,6 +457,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initOnClick(View v) {
+
         if (v.getTag().toString().equals("Enter")) {
             if (activePosition < (activeRow + 1) * letterGridArray[0].length) {
                 return;
@@ -458,8 +468,6 @@ public class MainActivity extends AppCompatActivity {
                 if (correct.toCharArray().length != letterGridArray[0].length) {
                     return;
                 }
-                int changeSize = 0;
-
 
                 for (int i = activeRow * letterGridArray[0].length; i < (activeRow + 1) * letterGridArray[0].length; i++) {
                     TextView viewToAnimate = tvSpaces.get(i);
@@ -473,7 +481,7 @@ public class MainActivity extends AppCompatActivity {
                         linearLayout.setBackgroundColor(getColor(R.color.green));
                     } else {
                         LinearLayout linearLayout = (LinearLayout) viewToAnimate.getParent();
-                        linearLayout.setBackgroundColor(getColor(R.color.darkend_Yellow));
+                        linearLayout.setBackgroundColor(getColor(R.color.pink));
 
                         char activeChar = viewToAnimate.getText().toString().toCharArray()[0];
 
@@ -484,6 +492,7 @@ public class MainActivity extends AppCompatActivity {
                         ArrayList<Integer> correctCharsPos = new ArrayList<>();
 
                         for (int j = activeRow * letterGridArray[0].length; j < (activeRow + 1) * letterGridArray[0].length; j++) {
+                            tvSpaces.get(j).setTextColor(getColor(R.color.white));
                             if (tvSpaces.get(j).getText().charAt(0) == activeChar) {
                                 activeRepeatCountPositions.add(j);
                             }
@@ -496,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        for (int correctPos: correctCharsPos){
+                        for (int correctPos : correctCharsPos) {
                             activeRepeatCountPositions.remove((Object) correctPos);
                         }
 
@@ -508,17 +517,29 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        if (filledCount == correctCharsPos.size()){
+                        if (filledCount == correctCharsPos.size()) {
                             linearLayout.setBackgroundColor(getColor(R.color.gray));
                         }
 
                         int tobeReplacedCount = correctCharCount - filledCount;
 
-                        for (int ii = 0; ii < activeRepeatCountPositions.size();ii++){
-                            if (ii < tobeReplacedCount){
-                                ((LinearLayout) tvSpaces.get(activeRepeatCountPositions.get(ii)).getParent()).setBackgroundColor(getColor(R.color.darkend_Yellow));
+                        for (int ii = 0; ii < activeRepeatCountPositions.size(); ii++) {
+                            if (ii < tobeReplacedCount) {
+                                ((LinearLayout) tvSpaces.get(activeRepeatCountPositions.get(ii)).getParent()).setBackgroundColor(getColor(R.color.pink));
+                                for (KeyboardViewBinding kb : letterViewBindingList) {
+                                    if (kb.getRoot().getTag().toString().equals(tvSpaces.get(activeRepeatCountPositions.get(ii)).getText().toString())) {
+                                        kb.tvLetter.setBackgroundColor(getColor(R.color.pink));
+                                        kb.llMain.setBackgroundColor(getColor(R.color.pink));
+                                    }
+                                }
                             } else {
                                 ((LinearLayout) tvSpaces.get(activeRepeatCountPositions.get(ii)).getParent()).setBackgroundColor(getColor(R.color.gray));
+                                for (KeyboardViewBinding kb : letterViewBindingList) {
+                                    if (kb.getRoot().getTag().toString().equals(tvSpaces.get(activeRepeatCountPositions.get(ii)).getText().toString())) {
+                                        kb.tvLetter.setBackgroundColor(getColor(R.color.gray));
+                                        kb.llMain.setBackgroundColor(getColor(R.color.gray));
+                                    }
+                                }
                             }
                         }
                     }
@@ -673,6 +694,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (activePosition < tvSpaces.size() && activePosition < ((activeRow + 1) * letterGridArray[0].length)) {
             tvSpaces.get(activePosition).setText("" + v.getTag());
+            tvSpaces.get(activePosition).setTextColor(getColor(R.color.gray));
             scaleView(tvSpaces.get(activePosition), 0f, 1f);
             activePosition++;
         }

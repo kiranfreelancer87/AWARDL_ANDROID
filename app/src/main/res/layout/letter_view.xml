@@ -18,7 +18,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="@dimen/_20ssp"
-            android:fontFamily="@font/gothambold"
+            android:fontFamily="@font/gothammedium"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

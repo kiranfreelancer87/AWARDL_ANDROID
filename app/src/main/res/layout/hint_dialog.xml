@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|start"
-            app:cardBackgroundColor="#E3F2FD">
+            app:cardBackgroundColor="@color/dialog_card_background_color">
             <LinearLayout
                 android:layout_gravity="center|start"
                 android:gravity="center|start"
@@ -44,7 +44,7 @@
                         android:orientation="vertical">
                         <TextView
                             android:layout_marginStart="@dimen/_10sdp"
-                            android:text="White Box:\nIncorrect letter"
+                            android:text="Dark gray box:\nIncorrect letter"
                             android:fontFamily="@font/gothambold"
                             android:textSize="@dimen/_12ssp"
                             android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                         android:orientation="vertical">
                         <TextView
                             android:layout_marginStart="@dimen/_10sdp"
-                            android:text="Yellow Box:\nCorrect letter, Incorrect space"
+                            android:text="Pink Box:\nCorrect letter, Incorrect space"
                             android:fontFamily="@font/gothambold"
                             android:textSize="@dimen/_12ssp"
                             android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
                         android:orientation="vertical">
                         <TextView
                             android:layout_marginStart="@dimen/_10sdp"
-                            android:text="Green Box:\nCorrect letter, correct space"
+                            android:text="Blue Box:\nCorrect letter, correct space"
                             android:fontFamily="@font/gothambold"
                             android:textSize="@dimen/_12ssp"
                             android:layout_width="wrap_content"

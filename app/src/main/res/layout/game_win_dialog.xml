@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center|start"
             android:layout_margin="@dimen/_2sdp"
-            app:cardBackgroundColor="#E3F2FD"
+            app:cardBackgroundColor="@color/dialog_card_background_color"
             app:cardCornerRadius="@dimen/_5sdp">
 
             <LinearLayout

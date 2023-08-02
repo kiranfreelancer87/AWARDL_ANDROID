@@ -8,9 +8,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    
-    <color name="green">#6aaa64</color>
-    <color name="gray">#86888a</color>
-    <color name="light_gray">#d3d6da</color>
-    <color name="darkend_Yellow">#e9b52e</color>
+
+    <color name="green">#19A6CC</color>
+    <color name="gray">#565656</color>
+    <color name="light_gray">#9E9E9E</color>
+    <color name="pink">#EE346C</color>
+    <color name="dialog_card_background_color">#F5F5F5</color>
 </resources>
